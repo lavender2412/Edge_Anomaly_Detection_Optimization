@@ -39,7 +39,7 @@ QUANT_ENGINE = "fbgemm"
 
 # Eager-mode torch.ao.quantization is deprecated in favour of torchao and
 # prints migration notices on every call; they are noise for this script.
-warnings.filterwarnings("ignore", message=r"(?s).*(torchao|migrat|quantized tensor creation|reduce_range)")
+warnings.filterwarnings("ignore", message=r"(?s).*(torchao|migrat|quantized tensor creation|reduce_range|run observer|TypedStorage)")
 
 
 def hard_sigmoid(x):
@@ -146,15 +146,22 @@ def load_keras_weights(model, h5_path):
 # --------------------------------------------------------------------------- #
 # Quantization
 # --------------------------------------------------------------------------- #
+# First and last layers stay fp32. They hold ~3% of the weights, but fbgemm's
+# int8 kernels for 1-channel convs are slow: int8 deconv2 alone took ~1.5 s
+# per clip vs 0.16 s in fp32.
+FP32_LAYERS = ("conv1", "deconv2")
+
+
 def _conv_paths(model):
-    return [n for n, m in model.named_modules() if isinstance(m, (nn.Conv2d, nn.Conv3d, nn.ConvTranspose3d))]
+    return [n for n, m in model.named_modules()
+            if isinstance(m, (nn.Conv2d, nn.Conv3d, nn.ConvTranspose3d)) and n not in FP32_LAYERS]
 
 
 def _wrap_convs_for_static_quant(model):
     """Wrap every conv in QuantWrapper (quant -> int8 conv -> dequant).
 
     The recurrent gate arithmetic (hard_sigmoid, tanh, mul, add) stays fp32,
-    which keeps the LSTM state numerically stable while all conv weights and
+    which keeps the LSTM state numerically stable while the conv weights and
     conv activations run in int8.
     """
     per_channel = tq.get_default_qconfig(QUANT_ENGINE)
