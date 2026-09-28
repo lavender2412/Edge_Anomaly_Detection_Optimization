@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+# Avenue dataset lives in the Suspicious_Activity_Detection repo; symlink or pass --data-dir.
+data

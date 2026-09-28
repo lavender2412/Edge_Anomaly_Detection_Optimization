@@ -1,0 +1,13 @@
+# Conversion, training and benchmarking (the API image uses api/requirements.txt).
+tensorflow-cpu==2.21.0
+tf_keras==2.21.0
+torch==2.14.0
+ai-edge-litert==2.2.0
+h5py==3.14.0
+scipy==1.17.1
+numpy==2.4.6
+opencv-python-headless==5.0.0.93
+fastapi==0.141.1
+uvicorn==0.54.0
+python-multipart==0.0.32
+httpx==0.28.1
