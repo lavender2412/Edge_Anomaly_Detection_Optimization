@@ -1,0 +1,9 @@
+{
+  "s_model.h5": 0.02041767481714487,
+  "keras_int8.tflite": 0.02042834460735321,
+  "edge_fp32.tflite": 0.02041767481714487,
+  "edge_int8.tflite": 0.020595292653888462,
+  "pytorch_fp32.pt": 0.02041767481714487,
+  "pytorch_int8_dynamic.pt": 0.02041767481714487,
+  "pytorch_int8_static.pt": 0.02129523744806647
+}

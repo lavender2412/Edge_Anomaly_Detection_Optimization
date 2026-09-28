@@ -1,0 +1,7 @@
+# Runtime-only dependencies for the inference container (no TensorFlow / PyTorch).
+ai-edge-litert==2.2.0
+fastapi==0.141.1
+uvicorn==0.54.0
+python-multipart==0.0.32
+numpy==2.4.6
+opencv-python-headless==5.0.0.93
